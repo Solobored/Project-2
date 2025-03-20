@@ -1,0 +1,87 @@
+### Variables
+@baseUrl = http://localhost:5000
+@productId = replace_with_actual_product_id
+@orderId = replace_with_actual_order_id
+
+### Get all products
+GET {{baseUrl}}/api/products
+
+### Get a single product
+GET {{baseUrl}}/api/products/{{productId}}
+
+### Create a product
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Smartphone X",
+  "description": "Latest smartphone with advanced features",
+  "price": 799.99,
+  "category": "Electronics",
+  "inStock": true,
+  "quantity": 50,
+  "imageUrl": "https://example.com/smartphone-x.jpg"
+}
+
+### Update a product
+PUT {{baseUrl}}/api/products/{{productId}}
+Content-Type: application/json
+
+{
+  "price": 749.99,
+  "quantity": 45
+}
+
+### Delete a product
+DELETE {{baseUrl}}/api/products/{{productId}}
+
+### Get all customer orders
+GET {{baseUrl}}/api/orders
+
+### Get a single order
+GET {{baseUrl}}/api/orders/{{orderId}}
+
+### Create an order
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customer": {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "USA"
+    }
+  },
+  "products": [
+    {
+      "productId": "{{productId}}",
+      "quantity": 2,
+      "price": 799.99
+    }
+  ],
+  "totalAmount": 1599.98,
+  "status": "pending",
+  "paymentMethod": "credit_card"
+}
+
+### Update an order
+PUT {{baseUrl}}/api/orders/{{orderId}}
+Content-Type: application/json
+
+{
+  "status": "shipped"
+}
+
+### Delete an order
+DELETE {{baseUrl}}/api/orders/{{orderId}}
+
+### Production API Tests
+@prodUrl = https://your-render-app.onrender.com
+
+### Get all products (Production)
+GET {{prodUrl}}/api/products
