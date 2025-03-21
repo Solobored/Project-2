@@ -10,13 +10,7 @@
     "build": "next build",
     "lint": "next lint"
   },
-  "keywords": [
-    "mongodb",
-    "express",
-    "api",
-    "crud",
-    "e-commerce"
-  ],
+  "keywords": ["mongodb", "express", "api", "crud", "e-commerce"],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -89,3 +83,4 @@
     "node": ">=14.0.0"
   }
 }
+
