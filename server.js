@@ -4,6 +4,7 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const connectDB = require('./config/db.config');
+const errorHandler = require('./middleware/error');
 
 dotenv.config();
 
@@ -17,8 +18,10 @@ app.use(cors());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+
 app.use('/api/products', require('./routes/product'));
 app.use('/api/orders', require('./routes/order'));
+
 
 app.get('/', (req, res) => {
   res.send(`
@@ -32,6 +35,8 @@ app.get('/', (req, res) => {
     </ul>
   `);
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
