@@ -1,48 +1,51 @@
-### Variables
-@baseUrl = http://localhost:5000
-@productId = replace_with_actual_product_id
+
+@localUrl = http://localhost:5000
+@renderUrl = https://project-2-xgs8.onrender.com
+@productId = 67dc4a8ca94645c727d2ba7c
 @orderId = replace_with_actual_order_id
 
-### Get all products
-GET {{baseUrl}}/api/products
+### LOCAL API TESTS ###
 
-### Get a single product
-GET {{baseUrl}}/api/products/{{productId}}
+### Get all products (Local)
+GET {{localUrl}}/api/products
 
-### Create a product
-POST {{baseUrl}}/api/products
+### Get a single product (Local)
+GET {{localUrl}}/api/products/{{productId}}
+
+### Create a product (Local)
+POST {{localUrl}}/api/products
 Content-Type: application/json
 
 {
-  "name": "Smartphone X",
-  "description": "Latest smartphone with advanced features",
-  "price": 799.99,
+  "name": "Smart TV",
+  "description": "Biggest tv on the market",
+  "price": 1.000,
   "category": "Electronics",
   "inStock": true,
-  "quantity": 50,
-  "imageUrl": "https://example.com/smartphone-x.jpg"
+  "quantity": 20,
+  "imageUrl": "https://example.com/smart-TV.jpg"
 }
 
-### Update a product
-PUT {{baseUrl}}/api/products/{{productId}}
+### Update a product (Local)
+PUT {{localUrl}}/api/products/{{productId}}
 Content-Type: application/json
 
 {
   "price": 749.99,
-  "quantity": 45
+  "quantity": 10
 }
 
-### Delete a product
-DELETE {{baseUrl}}/api/products/{{productId}}
+### Delete a product (Local)
+DELETE {{localUrl}}/api/products/{{productId}}
 
-### Get all customer orders
-GET {{baseUrl}}/api/orders
+### Get all customer orders (Local)
+GET {{localUrl}}/api/orders
 
-### Get a single order
-GET {{baseUrl}}/api/orders/{{orderId}}
+### Get a single order (Local)
+GET {{localUrl}}/api/orders/{{orderId}}
 
-### Create an order
-POST {{baseUrl}}/api/orders
+### Create an order (Local)
+POST {{localUrl}}/api/orders
 Content-Type: application/json
 
 {
@@ -69,19 +72,78 @@ Content-Type: application/json
   "paymentMethod": "credit_card"
 }
 
-### Update an order
-PUT {{baseUrl}}/api/orders/{{orderId}}
+### Update an order (Local)
+PUT {{localUrl}}/api/orders/{{orderId}}
 Content-Type: application/json
 
 {
   "status": "shipped"
 }
 
-### Delete an order
-DELETE {{baseUrl}}/api/orders/{{orderId}}
+### Delete an order (Local)
+DELETE {{localUrl}}/api/orders/{{orderId}}
 
-### Production API Tests
-@prodUrl = https://your-render-app.onrender.com
+### PRODUCTION API TESTS ###
 
 ### Get all products (Production)
-GET {{prodUrl}}/api/products
+GET {{renderUrl}}/api/products
+
+### Get a single product (Production)
+GET {{renderUrl}}/api/products/{{productId}}
+
+### Create a product (Production)
+POST {{renderUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Smartphone X",
+  "description": "Latest smartphone with advanced features",
+  "price": 799.99,
+  "category": "Electronics",
+  "inStock": true,
+  "quantity": 50,
+  "imageUrl": "https://example.com/smartphone-x.jpg"
+}
+
+### Update a product (Production)
+PUT {{renderUrl}}/api/products/{{productId}}
+Content-Type: application/json
+
+{
+  "price": 749.99,
+  "quantity": 45
+}
+
+### Delete a product (Production)
+DELETE {{renderUrl}}/api/products/{{productId}}
+
+### Get all customer orders (Production)
+GET {{renderUrl}}/api/orders
+
+### Create an order (Production)
+POST {{renderUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customer": {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "state": "CA",
+      "zipCode": "12345",
+      "country": "USA"
+    }
+  },
+  "products": [
+    {
+      "productId": "{{productId}}",
+      "quantity": 2,
+      "price": 799.99
+    }
+  ],
+  "totalAmount": 1599.98,
+  "status": "pending",
+  "paymentMethod": "credit_card"
+}

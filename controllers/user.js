@@ -56,7 +56,6 @@ exports.getUser = async (req, res) => {
 // @access  Public
 exports.createUser = async (req, res) => {
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email: req.body.email })
 
     if (existingUser) {
@@ -68,7 +67,6 @@ exports.createUser = async (req, res) => {
 
     const user = await User.create(req.body)
 
-    // Remove password from response
     user.password = undefined
 
     res.status(201).json({

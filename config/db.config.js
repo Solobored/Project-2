@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Update the database name to E-commerceAPI
+    if (!process.env.MONGODB_URI) {
+      console.error('MONGODB_URI environment variable is not defined');
+      process.exit(1);
+    }
+    
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       dbName: 'E-commerceAPI'
     });
