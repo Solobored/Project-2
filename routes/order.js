@@ -1,12 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const { 
-  getOrders, 
-  getOrder, 
-  createOrder, 
-  updateOrder, 
-  deleteOrder 
-} = require('../controllers/order');
+const express = require("express")
+const router = express.Router()
+const { getOrders, getOrder, createOrder, updateOrder, deleteOrder } = require("../controllers/order")
+
+const { protect, authorize } = require("../middleware/auth")
 
 /**
  * @swagger
@@ -14,13 +10,18 @@ const {
  *   get:
  *     summary: Get all orders
  *     description: Retrieve a list of all customer orders
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of orders
+ *       401:
+ *         description: Not authorized
  *       500:
  *         description: Server error
  */
-router.get('/', getOrders);
+router.get("/", protect, getOrders)
 
 /**
  * @swagger
@@ -28,6 +29,9 @@ router.get('/', getOrders);
  *   get:
  *     summary: Get an order by ID
  *     description: Retrieve a single order by its ID
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -38,12 +42,14 @@ router.get('/', getOrders);
  *     responses:
  *       200:
  *         description: A single order
+ *       401:
+ *         description: Not authorized
  *       404:
  *         description: Order not found
  *       500:
  *         description: Server error
  */
-router.get('/:id', getOrder);
+router.get("/:id", protect, getOrder)
 
 /**
  * @swagger
@@ -51,6 +57,9 @@ router.get('/:id', getOrder);
  *   post:
  *     summary: Create a new order
  *     description: Add a new customer order to the database
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -106,10 +115,12 @@ router.get('/:id', getOrder);
  *         description: Order created successfully
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Not authorized
  *       500:
  *         description: Server error
  */
-router.post('/', createOrder);
+router.post("/", protect, createOrder)
 
 /**
  * @swagger
@@ -117,6 +128,9 @@ router.post('/', createOrder);
  *   put:
  *     summary: Update an order
  *     description: Update an order by its ID
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -147,12 +161,14 @@ router.post('/', createOrder);
  *         description: Order updated successfully
  *       400:
  *         description: Validation error
+ *       401:
+ *         description: Not authorized
  *       404:
  *         description: Order not found
  *       500:
  *         description: Server error
  */
-router.put('/:id', updateOrder);
+router.put("/:id", protect, updateOrder)
 
 /**
  * @swagger
@@ -160,6 +176,9 @@ router.put('/:id', updateOrder);
  *   delete:
  *     summary: Delete an order
  *     description: Delete an order by its ID
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -170,11 +189,14 @@ router.put('/:id', updateOrder);
  *     responses:
  *       200:
  *         description: Order deleted successfully
+ *       401:
+ *         description: Not authorized
  *       404:
  *         description: Order not found
  *       500:
  *         description: Server error
  */
-router.delete('/:id', deleteOrder);
+router.delete("/:id", protect, deleteOrder)
 
-module.exports = router;
+module.exports = router
+

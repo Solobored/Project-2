@@ -5,13 +5,36 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "My API",
+      title: "E-commerce API",
       version: "1.0.0",
-      description: "A simple Express API with MongoDB",
+      description: "A simple Express API with MongoDB and OAuth authentication",
     },
     servers: [
       {
-        url: process.env.NODE_ENV === "production" ? "https://your-render-app.onrender.com" : "http://localhost:5000",
+        url: process.env.NODE_ENV === "production" ? "https://project-2-xgs8.onrender.com" : "http://localhost:5000",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    tags: [
+      {
+        name: "Authentication",
+        description: "Authentication endpoints",
+      },
+      {
+        name: "Products",
+        description: "Product management endpoints",
+      },
+      {
+        name: "Orders",
+        description: "Order management endpoints",
       },
     ],
   },
