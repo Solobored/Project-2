@@ -8,6 +8,8 @@ const connectDB = require("./config/db.config")
 const { swaggerUi, specs } = require("./swagger")
 const errorHandler = require("./middleware/error")
 
+require('dotenv').config();
+
 // Load env vars
 dotenv.config()
 
