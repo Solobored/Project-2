@@ -33,19 +33,6 @@ const options = {
           scheme: "bearer",
           bearerFormat: "JWT",
         },
-        googleOAuth: {
-          type: "oauth2",
-          flows: {
-            authorizationCode: {
-              authorizationUrl: "/api/auth/google",
-              tokenUrl: "/api/auth/google/callback",
-              scopes: {
-                "profile": "Access user profile",
-                "email": "Access user email"
-              },
-            },
-          },
-        },
       },
     },
     tags: [
