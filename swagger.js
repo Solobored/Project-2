@@ -1,13 +1,6 @@
 const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
 
-console.log('Current Environment:', process.env.NODE_ENV);
-console.log('Swagger Server URL:', 
-  process.env.NODE_ENV === 'production'
-    ? 'https://project-2-xgs8.onrender.com'
-    : 'http://localhost:5000'
-);
-
 const options = {
   definition: {
     openapi: "3.0.0",
