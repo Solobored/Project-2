@@ -11,7 +11,10 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === "production" ? "https://project-2-xgs8.onrender.com" : "http://localhost:5000",
+        url: process.env.NODE_ENV === 'production' 
+          ? 'https://project-2-xgs8.onrender.com' // Your Render URL
+          : 'http://localhost:5000',
+        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
       },
     ],
     components: {

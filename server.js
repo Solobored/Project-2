@@ -45,7 +45,8 @@ app.use(passport.session())
 app.use(cors({
   origin: [
     'http://localhost:5000',  
-    'https://project-2-xgs8.onrender.com',  
+    'https://project-2-xgs8.onrender.com', 
+    'https://project-2-xgs8.onrender.com/api-docs/', 
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
