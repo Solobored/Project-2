@@ -6,31 +6,43 @@ const jwt = require("jsonwebtoken")
 // @access  Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body
+    // Add debugging to see what's coming in the request
+    console.log('Register request body:', req.body);
+    
+    const { name, email, password, role } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide name, email and password"
+      });
+    }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        error: "User with that email already exists",
-      })
+        error: "User with that email already exists"
+      });
     }
 
-    // Create user
+    // Create user with default role if not provided
     const user = await User.create({
       name,
       email,
       password,
-      role,
-    })
+      role: role || 'user'
+    });
 
-    sendTokenResponse(user, 201, res)
+    sendTokenResponse(user, 201, res);
   } catch (error) {
-    next(error)
+    console.error('Registration error:', error);
+    next(error);
   }
-}
+};
 
 // @desc    Login user
 // @route   POST /api/auth/login

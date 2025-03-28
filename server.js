@@ -24,6 +24,9 @@ app.use(express.json())
 // Cookie parser
 app.use(cookieParser())
 
+// In server.js, add this before your routes
+app.use(express.urlencoded({ extended: true }));
+
 // Session middleware
 app.use(
   session({
@@ -61,8 +64,103 @@ app.get("/", (req, res) => {
     <p>Welcome to the E-commerce API</p>
     <h2>Available Endpoints:</h2>
     <ul>
-      <li><a href="/api/auth/register">/api/auth/register</a> - Register a new user</li>
-      <li><a href="/api/auth/login">/api/auth/login</a> - Login</li>
+      <li>
+        <h3>Register a new user</h3>
+        <form id="registerForm">
+          <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <button type="submit">Register</button>
+        </form>
+        <div id="registerResult"></div>
+        
+        <script>
+          document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+              const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name, email, password })
+              });
+              
+              const data = await response.json();
+              document.getElementById('registerResult').textContent = JSON.stringify(data, null, 2);
+              
+              if (data.success) {
+                alert('Registration successful!');
+                window.location.reload();
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              document.getElementById('registerResult').textContent = 'An error occurred during registration';
+            }
+          });
+        </script>
+      </li>
+      
+      <li>
+        <h3>Login</h3>
+        <form id="loginForm">
+          <div>
+            <label for="loginEmail">Email:</label>
+            <input type="email" id="loginEmail" name="email" required>
+          </div>
+          <div>
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="password" required>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        <div id="loginResult"></div>
+        
+        <script>
+          document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+              const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+              });
+              
+              const data = await response.json();
+              document.getElementById('loginResult').textContent = JSON.stringify(data, null, 2);
+              
+              if (data.success) {
+                alert('Login successful!');
+                window.location.reload();
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              document.getElementById('loginResult').textContent = 'An error occurred during login';
+            }
+          });
+        </script>
+      </li>
+      
       <li><a href="/api/auth/me">/api/auth/me</a> - Get current user (protected)</li>
       <li><a href="/api/auth/logout">/api/auth/logout</a> - Logout</li>
       <li><a href="/api/auth/google">/api/auth/google</a> - Login with Google</li>
