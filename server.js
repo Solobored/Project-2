@@ -213,9 +213,13 @@ app.use(errorHandler)
 const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`)
-  console.log(`API Documentation available at http://localhost:${PORT}/api-docs`)
-})
+  const baseUrl = process.env.NODE_ENV === "production" 
+    ? "https://project-2-xgs8.onrender.com" 
+    : `http://localhost:${PORT}`;
+    
+  console.log(`Server running in ${process.env.NODE_ENV || "development"} mode`);
+  console.log(`API Docs: ${baseUrl}/api-docs`);
+});
 
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`)

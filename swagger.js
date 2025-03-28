@@ -1,5 +1,5 @@
-const swaggerJsDoc = require("swagger-jsdoc")
-const swaggerUi = require("swagger-ui-express")
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const options = {
   definition: {
@@ -7,12 +7,14 @@ const options = {
     info: {
       title: "E-commerce API",
       version: "1.0.0",
-      description: "A simple Express API with MongoDB and OAuth authentication",
+      description: "Production-ready API with OAuth",
     },
-       servers: [{
-         url: 'https://project-2-xgs8.onrender.com',
-        description: 'Production server'
-    }],
+    servers: [
+      {
+        url: "https://project-2-xgs8.onrender.com",
+        description: "Production server"
+      }
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -23,30 +25,13 @@ const options = {
       },
     },
     tags: [
-      {
-        name: "Authentication",
-        description: "Authentication endpoints",
-      },
-      {
-        name: "Products",
-        description: "Product management endpoints",
-      },
-      {
-        name: "Orders",
-        description: "Order management endpoints",
-      },
+      { name: "Authentication", description: "User auth endpoints" },
+      { name: "Products", description: "Product management" },
+      { name: "Orders", description: "Order processing" },
     ],
   },
   apis: ["./routes/*.js"],
-}
+};
 
-let specs;
-try {
-  specs = swaggerJsDoc(options);
-  console.log('Swagger specs generated successfully');
-} catch (error) {
-  console.error('Error generating Swagger specs:', error);
-  specs = {}; 
-}
-
-module.exports = { swaggerUi, specs }
+const specs = swaggerJsDoc(options);
+module.exports = { swaggerUi, specs };
