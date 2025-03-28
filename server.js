@@ -1,12 +1,22 @@
 const express = require("express")
 const dotenv = require("dotenv")
-const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const passport = require("./config/passport")
 const connectDB = require("./config/db.config")
 const { swaggerUi, specs } = require("./swagger")
 const errorHandler = require("./middleware/error")
+const cors = require('cors');
+
+
+app.use(cors({
+  origin: [
+    'http://localhost:5000',  
+    'https://your-render-deployment-url.onrender.com',  
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 require('dotenv').config();
 
