@@ -35,13 +35,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      ttl: 14 * 24 * 60 * 60 
-    }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
       secure: true, 
-      sameSite: 'none'
+      sameSite: "none",
+      maxAge: 14 * 24 * 60 * 60 * 1000 
     }
   })
 );
@@ -51,22 +49,21 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // Logging middleware
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production' && !req.secure) {
-    return res.redirect('https://' + req.headers.host + req.url);
-  }
-  next();
-});
+  //app.use((req, res, next) => {
+   // if (process.env.NODE_ENV === 'production' && !req.secure) {
+   //   return res.redirect('https://' + req.headers.host + req.url);
+   // }
+   // next();
+ //});
 
 // Enable CORS
 app.use(cors({
   origin: [
-    'http://localhost:5000',  
-    'https://project-2-xgs8.onrender.com', 
+    'https://project-2-xgs8.onrender.com',
+    'http://localhost:5000'
   ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
 app.options('*', cors());
