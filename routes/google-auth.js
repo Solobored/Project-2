@@ -47,7 +47,6 @@ router.get('/google/callback',
     session: false 
   }),
   (req, res) => {
-    // Generate JWT token or handle successful login
     res.redirect('/');
   }
 );

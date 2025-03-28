@@ -4,10 +4,9 @@ const JwtStrategy = require("passport-jwt").Strategy;
 const { ExtractJwt } = require("passport-jwt");
 const User = require("../models/user");
 
-// Ensure dotenv is configured at the top of your main file (server.js or index.js)
 require('dotenv').config();
 
-// Validate environment variables
+
 if (!process.env.JWT_SECRET) {
   console.error('FATAL ERROR: JWT_SECRET is not defined in .env file');
   process.exit(1);
@@ -18,13 +17,11 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   process.exit(1);
 }
 
-// JWT Strategy Options
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET
 };
 
-// JWT Strategy
 passport.use(
   new JwtStrategy(jwtOptions, async (payload, done) => {
     try {
@@ -44,7 +41,6 @@ passport.use(
   })
 );
 
-// Google OAuth Strategy
 passport.use(
   new GoogleStrategy(
     {
@@ -61,12 +57,11 @@ passport.use(
           return done(null, user);
         }
 
-        // Create new user if not exists
         user = await User.create({
           name: profile.displayName,
           email: profile.emails[0].value,
           googleId: profile.id,
-          password: require('crypto').randomBytes(20).toString('hex') // More secure random password
+          password: require('crypto').randomBytes(20).toString('hex') 
         });
 
         return done(null, user);
@@ -78,7 +73,6 @@ passport.use(
   )
 );
 
-// User Serialization
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });

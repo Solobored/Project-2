@@ -6,12 +6,11 @@ const jwt = require("jsonwebtoken")
 // @access  Public
 exports.register = async (req, res, next) => {
   try {
-    // Add debugging to see what's coming in the request
+  
     console.log('Register request body:', req.body);
     
     const { name, email, password, role } = req.body;
 
-    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -19,7 +18,6 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -29,7 +27,6 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Create user with default role if not provided
     const user = await User.create({
       name,
       email,
@@ -51,7 +48,6 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body
 
-    // Validate email & password
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -59,7 +55,6 @@ exports.login = async (req, res, next) => {
       })
     }
 
-    // Check for user
     const user = await User.findOne({ email }).select("+password")
 
     if (!user) {
@@ -69,7 +64,6 @@ exports.login = async (req, res, next) => {
       })
     }
 
-    // Check if password matches
     const isMatch = await user.matchPassword(password)
 
     if (!isMatch) {
@@ -120,9 +114,8 @@ exports.logout = async (req, res, next) => {
   }
 }
 
-// Get token from model, create cookie and send response
+
 const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
   const token = user.getSignedJwtToken()
 
   const options = {

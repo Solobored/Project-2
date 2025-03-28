@@ -86,7 +86,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Home route with more detailed information
+// Home route 
 app.get("/", (req, res) => {
   res.send(`
     <h1>E-commerce API</h1>
@@ -200,7 +200,6 @@ app.get("/", (req, res) => {
   `)
 })
 
-// Error handling middleware
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
@@ -210,10 +209,7 @@ app.listen(PORT, () => {
   console.log(`API Documentation available at http://localhost:${PORT}/api-docs`)
 })
 
-// Handle unhandled promise rejections
 process.on("unhandledRejection", (err, promise) => {
   console.log(`Error: ${err.message}`)
-  // Close server & exit process
-  // server.close(() => process.exit(1));
 })
 

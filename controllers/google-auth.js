@@ -4,13 +4,12 @@ const User = require("../models/user")
 // @route   GET /api/auth/google/callback
 // @access  Public
 exports.googleCallback = async (req, res) => {
-  // The user is already set by passport
   sendTokenResponse(req.user, 200, res)
 }
 
-// Get token from model, create cookie and send response
+
 const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
+
   const token = user.getSignedJwtToken()
 
   const options = {

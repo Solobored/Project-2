@@ -104,7 +104,6 @@ exports.updateUser = async (req, res) => {
       })
     }
 
-    // Don't allow password updates through this route
     if (req.body.password) {
       delete req.body.password
     }

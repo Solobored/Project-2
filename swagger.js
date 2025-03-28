@@ -1,7 +1,6 @@
 const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
 
-// Add some logging to help diagnose the issue
 console.log('Current Environment:', process.env.NODE_ENV);
 console.log('Swagger Server URL:', 
   process.env.NODE_ENV === 'production'
@@ -67,14 +66,13 @@ const options = {
   apis: ["./routes/*.js"],
 }
 
-// Add error handling for Swagger spec generation
 let specs;
 try {
   specs = swaggerJsDoc(options);
   console.log('Swagger specs generated successfully');
 } catch (error) {
   console.error('Error generating Swagger specs:', error);
-  specs = {}; // Provide a fallback
+  specs = {}; 
 }
 
 module.exports = { swaggerUi, specs }
