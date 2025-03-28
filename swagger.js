@@ -16,16 +16,10 @@ const options = {
       version: "1.0.0",
       description: "A simple Express API with MongoDB and OAuth authentication",
     },
-    servers: [
-      {
-        url: process.env.NODE_ENV === 'production'
-          ? 'https://project-2-xgs8.onrender.com'
-          : 'http://localhost:5000',
-        description: process.env.NODE_ENV === 'production' 
-          ? 'Production server' 
-          : 'Development server',
-      },
-    ],
+       servers: [{
+         url: 'https://project-2-xgs8.onrender.com',
+        description: 'Production server'
+    }],
     components: {
       securitySchemes: {
         bearerAuth: {

@@ -29,15 +29,19 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 // Session middleware
+const MongoStore = require('connect-mongo');
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    proxy: true, // Required for HTTPS
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 14 * 24 * 60 * 60 
+    }),
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: true, 
+      sameSite: 'none'
     }
   })
 );
@@ -48,9 +52,9 @@ app.use(passport.session())
 
 // Logging middleware
 app.use((req, res, next) => {
-  console.log('Request URL:', req.url);
-  console.log('Request Method:', req.method);
-  console.log('Request Headers:', req.headers);
+  if (process.env.NODE_ENV === 'production' && !req.secure) {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
   next();
 });
 
