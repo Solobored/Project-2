@@ -44,6 +44,8 @@ app.use(
   })
 );
 
+app.set('trust proxy', 1); // Confía en el primer proxy
+
 // Initialize Passport
 app.use(passport.initialize())
 app.use(passport.session())
@@ -58,11 +60,18 @@ app.use(passport.session())
 
 // Enable CORS
 app.use(cors({
-  origin: [
-    'https://project-2-xgs8.onrender.com',
-    'http://localhost:5000'
-  ],
-  credentials: true, 
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'https://project-2-xgs8.onrender.com',
+      'http://localhost:3000' // Solo desarrollo
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origen no permitido por CORS'));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
