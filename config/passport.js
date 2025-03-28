@@ -1,10 +1,10 @@
+require('dotenv').config();
+
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const { ExtractJwt } = require("passport-jwt");
 const User = require("../models/user");
-
-require('dotenv').config();
 
 
 if (!process.env.JWT_SECRET) {
