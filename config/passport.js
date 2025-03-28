@@ -49,7 +49,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'https://project-2-xgs8.onrender.com/api/auth/google/callback', // URL absoluta
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
       passReqToCallback: true
     },
     async (req, accessToken, refreshToken, profile, done) => {

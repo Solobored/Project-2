@@ -100,11 +100,18 @@ exports.getMe = async (req, res, next) => {
 // @access  Private
 exports.logout = async (req, res, next) => {
   try {
+    // auth.js - logout
     res.cookie("token", "none", {
-      expires: new Date(Date.now() + 10 * 1000),
+      expires: new Date(Date.now() + 10 * 1000), // Expire in 10s
       httpOnly: true,
-    })
-
+      secure: process.env.NODE_ENV === "production", // Required for HTTPS
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      domain: process.env.NODE_ENV === "production" ? ".render.com" : "localhost"
+    });
+    res.cookie("token", token, {
+      ...options,
+      domain: process.env.NODE_ENV === "production" ? ".render.com" : "localhost"
+    });
     res.status(200).json({
       success: true,
       data: {},
