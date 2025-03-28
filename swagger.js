@@ -42,9 +42,9 @@ const options = {
               scopes: {
                 "profile": "Access user profile",
                 "email": "Access user email"
-              }
-            }
-          }
+              },
+            },
+          },
         },
       },
     },
