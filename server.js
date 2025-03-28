@@ -55,6 +55,7 @@ app.use(cors({
     'http://localhost:5000',  
     'https://project-2-xgs8.onrender.com', 
     'https://project-2-xgs8.onrender.com/api-docs/', 
+    'https://accounts.google.com',
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -74,6 +75,16 @@ app.use("/api/auth", require("./routes/auth"))
 app.use("/api/auth", require("./routes/google-auth")) // Add Google OAuth routes
 app.use("/api/products", require("./routes/product"))
 app.use("/api/orders", require("./routes/order"))
+app.use("/api/users", require("./routes/user"));
+
+app.use((req, res, next) => {
+  console.log('Incoming Request:', {
+    method: req.method,
+    path: req.path,
+    headers: req.headers
+  });
+  next();
+});
 
 // Home route with more detailed information
 app.get("/", (req, res) => {
