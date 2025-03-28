@@ -41,6 +41,14 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Logging middleware
+app.use((req, res, next) => {
+  console.log('Request URL:', req.url);
+  console.log('Request Method:', req.method);
+  console.log('Request Headers:', req.headers);
+  next();
+});
+
 // Enable CORS
 app.use(cors({
   origin: [
@@ -52,8 +60,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.options('*', cors());
+
+
 // API Documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, {
+  explorer: true,
+  customSiteTitle: "E-commerce API Docs"
+}));
 
 // Mount routers
 app.use("/api/auth", require("./routes/auth"))

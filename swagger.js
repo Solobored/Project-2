@@ -1,6 +1,14 @@
 const swaggerJsDoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
 
+// Add some logging to help diagnose the issue
+console.log('Current Environment:', process.env.NODE_ENV);
+console.log('Swagger Server URL:', 
+  process.env.NODE_ENV === 'production'
+    ? 'https://project-2-xgs8.onrender.com'
+    : 'http://localhost:5000'
+);
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -11,10 +19,12 @@ const options = {
     },
     servers: [
       {
-        url: process.env.NODE_ENV === 'production' 
-          ? 'https://project-2-xgs8.onrender.com' // Your Render URL
+        url: process.env.NODE_ENV === 'production'
+          ? 'https://project-2-xgs8.onrender.com'
           : 'http://localhost:5000',
-        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
+        description: process.env.NODE_ENV === 'production' 
+          ? 'Production server' 
+          : 'Development server',
       },
     ],
     components: {
@@ -44,7 +54,14 @@ const options = {
   apis: ["./routes/*.js"],
 }
 
-const specs = swaggerJsDoc(options)
+// Add error handling for Swagger spec generation
+let specs;
+try {
+  specs = swaggerJsDoc(options);
+  console.log('Swagger specs generated successfully');
+} catch (error) {
+  console.error('Error generating Swagger specs:', error);
+  specs = {}; // Provide a fallback
+}
 
 module.exports = { swaggerUi, specs }
-
