@@ -9,15 +9,6 @@ const errorHandler = require("./middleware/error")
 const cors = require('cors');
 
 
-app.use(cors({
-  origin: [
-    'http://localhost:5000',  
-    'https://your-render-deployment-url.onrender.com',  
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
 require('dotenv').config();
 
 // Load env vars
@@ -51,12 +42,14 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 // Enable CORS
-app.use(
-  cors({
-    origin: process.env.NODE_ENV === "production" ? "https://project-2-xgs8.onrender.com" : "http://localhost:5000",
-    credentials: true,
-  }),
-)
+app.use(cors({
+  origin: [
+    'http://localhost:5000',  
+    'https://your-render-deployment-url.onrender.com',  
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // API Documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
