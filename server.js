@@ -31,11 +31,16 @@ app.use(express.urlencoded({ extended: true }));
 // Session middleware
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-  }),
-)
+    proxy: true, // Required for HTTPS
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    }
+  })
+);
 
 // Initialize Passport
 app.use(passport.initialize())
@@ -54,8 +59,8 @@ app.use(cors({
   origin: [
     'http://localhost:5000',  
     'https://project-2-xgs8.onrender.com', 
-    'https://project-2-xgs8.onrender.com/api-docs/', 
   ],
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

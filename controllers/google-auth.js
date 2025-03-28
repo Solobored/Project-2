@@ -33,4 +33,24 @@ router.get(
   googleCallback,
 )
 
+exports.googleCallback = (req, res) => {
+  const token = req.user.getSignedJwtToken();
+  
+  res.cookie('token', token, {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none',
+    httpOnly: true
+  });
+
+  res.redirect(process.env.FRONTEND_URI || 'http://localhost:3000');
+};
+
+router.get('/google/callback',
+  passport.authenticate('google', { 
+    failureRedirect: '/login-error',
+    session: false 
+  }),
+  googleCallback
+);
+
 module.exports = router
