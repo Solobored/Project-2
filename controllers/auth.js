@@ -101,13 +101,21 @@ exports.getMe = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   try {
     // auth.js - logout
-    res.cookie("token", "none", {
-      expires: new Date(Date.now() + 10 * 1000), // Expire in 10s
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Required for HTTPS
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      domain: process.env.NODE_ENV === "production" ? ".render.com" : "localhost"
-    });
+    exports.logout = async (req, res, next) => {
+      try {
+        res.cookie("token", "none", { // Hardcode "none" instead of a variable
+          expires: new Date(Date.now() + 10 * 1000),
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Required for HTTPS
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+          domain: process.env.NODE_ENV === "production" ? ".render.com" : "localhost"
+        });
+    
+        res.status(200).json({ success: true, data: {} });
+      } catch (error) {
+        next(error);
+      }
+    };
     res.cookie("token", token, {
       ...options,
       domain: process.env.NODE_ENV === "production" ? ".render.com" : "localhost"
