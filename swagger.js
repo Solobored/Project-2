@@ -45,8 +45,8 @@ const options = {
               }
             }
           }
-        }
-      }
+        },
+      },
     },
     tags: [
       {
