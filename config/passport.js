@@ -1,80 +1,76 @@
-import passport from "passport"
-import { Strategy as GoogleStrategy } from "passport-google-oauth20"
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt"
-import User from "../models/userModel.js"
-import dotenv from "dotenv"
+const passport = require("passport")
+const GoogleStrategy = require("passport-google-oauth20").Strategy
+const JwtStrategy = require("passport-jwt").Strategy
+const { ExtractJwt } = require("passport-jwt")
+const User = require("../models/user")
 
-dotenv.config()
+// JWT strategy
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
+}
 
-// Google OAuth Strategy
+passport.use(
+  new JwtStrategy(jwtOptions, async (payload, done) => {
+    try {
+      const user = await User.findById(payload.id)
+
+      if (user) {
+        return done(null, user)
+      }
+      return done(null, false)
+    } catch (err) {
+      return done(err, false)
+    }
+  }),
+)
+
+// Google strategy
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        process.env.NODE_ENV === "production" ? process.env.GOOGLE_CALLBACK_URL : process.env.GOOGLE_CALLBACK_URL_DEV,
-      scope: ["profile", "email"],
-      proxy: true, // Add this to handle proxy issues on Render
+      callbackURL: "/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check if user already exists
         let user = await User.findOne({ googleId: profile.id })
 
-        if (!user) {
-          // Create new user
-          user = await User.create({
-            googleId: profile.id,
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            avatar: profile.photos[0].value,
-          })
-        }
-
-        return done(null, user)
-      } catch (error) {
-        return done(error, null)
-      }
-    },
-  ),
-)
-
-// JWT Strategy
-passport.use(
-  new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_SECRET,
-    },
-    async (jwtPayload, done) => {
-      try {
-        const user = await User.findById(jwtPayload.id)
-
         if (user) {
           return done(null, user)
         }
 
-        return done(null, false)
-      } catch (error) {
-        return done(error, false)
+        // If not, create new user
+        user = await User.create({
+          name: profile.displayName,
+          email: profile.emails[0].value,
+          googleId: profile.id,
+          password: Math.random().toString(36).slice(-8), // Generate random password
+        })
+
+        return done(null, user)
+      } catch (err) {
+        return done(err, false)
       }
     },
   ),
 )
 
-// Serialize user
+// Serialize and deserialize user
 passport.serializeUser((user, done) => {
   done(null, user.id)
 })
 
-// Deserialize user
 passport.deserializeUser(async (id, done) => {
   try {
     const user = await User.findById(id)
     done(null, user)
-  } catch (error) {
-    done(error, null)
+  } catch (err) {
+    done(err, null)
   }
 })
+
+module.exports = passport
 

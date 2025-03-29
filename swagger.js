@@ -1,7 +1,3 @@
-require('dotenv').config();
-// And then later
-dotenv.config();
-
 const express = require("express")
 const dotenv = require("dotenv")
 const cors = require("cors")
@@ -12,7 +8,8 @@ const connectDB = require("./config/db.config")
 const { swaggerUi, specs } = require("./swagger")
 const errorHandler = require("./middleware/error")
 
-
+// Load env vars
+dotenv.config()
 
 // Connect to database
 connectDB()
