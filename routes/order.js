@@ -1,33 +1,47 @@
-const express = require("express")
-const router = express.Router()
-const { getOrders, getOrder, createOrder, updateOrder, deleteOrder } = require("../controllers/order")
-
-const { protect, authorize } = require("../middleware/auth")
+const express = require("express");
+const router = express.Router();
+const { 
+  getOrders, 
+  getOrder, 
+  createOrder, 
+  updateOrder, 
+  deleteOrder,
+  validateOrderCreation 
+} = require("../controllers/order");
+const { protect, authorize } = require("../middleware/auth");
 
 /**
  * @swagger
  * /api/orders:
  *   get:
- *     summary: Get all orders
- *     description: Retrieve a list of all customer orders
+ *     summary: Get all orders (Admin only)
+ *     description: Retrieve a list of all orders
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: A list of orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Order'
  *       401:
  *         description: Not authorized
+ *       403:
+ *         description: Forbidden (admin access required)
  *       500:
  *         description: Server error
  */
-router.get("/", protect, getOrders)
+router.get("/", protect, authorize('admin'), getOrders);
 
 /**
  * @swagger
  * /api/orders/{id}:
  *   get:
- *     summary: Get an order by ID
+ *     summary: Get order by ID
  *     description: Retrieve a single order by its ID
  *     tags: [Orders]
  *     security:
@@ -36,12 +50,16 @@ router.get("/", protect, getOrders)
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the order
  *         schema:
  *           type: string
+ *         description: MongoDB order ID
  *     responses:
  *       200:
- *         description: A single order
+ *         description: Order data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
  *       401:
  *         description: Not authorized
  *       404:
@@ -49,14 +67,14 @@ router.get("/", protect, getOrders)
  *       500:
  *         description: Server error
  */
-router.get("/:id", protect, getOrder)
+router.get("/:id", protect, getOrder);
 
 /**
  * @swagger
  * /api/orders:
  *   post:
- *     summary: Create a new order
- *     description: Add a new customer order to the database
+ *     summary: Create new order
+ *     description: Create a new customer order
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
@@ -67,52 +85,33 @@ router.get("/:id", protect, getOrder)
  *           schema:
  *             type: object
  *             required:
- *               - customer
  *               - products
- *               - totalAmount
  *               - paymentMethod
  *             properties:
- *               customer:
- *                 type: object
- *                 properties:
- *                   name:
- *                     type: string
- *                   email:
- *                     type: string
- *                   address:
- *                     type: object
- *                     properties:
- *                       street:
- *                         type: string
- *                       city:
- *                         type: string
- *                       state:
- *                         type: string
- *                       zipCode:
- *                         type: string
- *                       country:
- *                         type: string
  *               products:
  *                 type: array
  *                 items:
  *                   type: object
+ *                   required:
+ *                     - product
+ *                     - quantity
  *                   properties:
- *                     productId:
+ *                     product:
  *                       type: string
+ *                       description: MongoDB product ID
  *                     quantity:
  *                       type: integer
- *                     price:
- *                       type: number
- *               totalAmount:
- *                 type: number
- *               status:
- *                 type: string
- *                 enum: [pending, processing, shipped, delivered, cancelled]
+ *                       minimum: 1
  *               paymentMethod:
  *                 type: string
+ *                 enum: [credit_card, paypal, cash]
  *     responses:
  *       201:
- *         description: Order created successfully
+ *         description: Order created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
  *       400:
  *         description: Validation error
  *       401:
@@ -120,14 +119,14 @@ router.get("/:id", protect, getOrder)
  *       500:
  *         description: Server error
  */
-router.post("/", protect, createOrder)
+router.post("/", protect, validateOrderCreation, createOrder);
 
 /**
  * @swagger
  * /api/orders/{id}:
  *   put:
- *     summary: Update an order
- *     description: Update an order by its ID
+ *     summary: Update order status (Admin only)
+ *     description: Update order status
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
@@ -135,9 +134,9 @@ router.post("/", protect, createOrder)
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the order
  *         schema:
  *           type: string
+ *         description: MongoDB order ID
  *     requestBody:
  *       required: true
  *       content:
@@ -148,34 +147,32 @@ router.post("/", protect, createOrder)
  *               status:
  *                 type: string
  *                 enum: [pending, processing, shipped, delivered, cancelled]
- *               customer:
- *                 type: object
- *               products:
- *                 type: array
- *               totalAmount:
- *                 type: number
- *               paymentMethod:
- *                 type: string
  *     responses:
  *       200:
- *         description: Order updated successfully
+ *         description: Order updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
  *       400:
- *         description: Validation error
+ *         description: Invalid status
  *       401:
  *         description: Not authorized
+ *       403:
+ *         description: Forbidden (admin access required)
  *       404:
  *         description: Order not found
  *       500:
  *         description: Server error
  */
-router.put("/:id", protect, updateOrder)
+router.put("/:id", protect, authorize('admin'), updateOrder);
 
 /**
  * @swagger
  * /api/orders/{id}:
  *   delete:
- *     summary: Delete an order
- *     description: Delete an order by its ID
+ *     summary: Delete order (Admin only)
+ *     description: Delete an order by ID
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
@@ -183,20 +180,21 @@ router.put("/:id", protect, updateOrder)
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the order
  *         schema:
  *           type: string
+ *         description: MongoDB order ID
  *     responses:
  *       200:
- *         description: Order deleted successfully
+ *         description: Order deleted
  *       401:
  *         description: Not authorized
+ *       403:
+ *         description: Forbidden (admin access required)
  *       404:
  *         description: Order not found
  *       500:
  *         description: Server error
  */
-router.delete("/:id", protect, deleteOrder)
+router.delete("/:id", protect, authorize('admin'), deleteOrder);
 
-module.exports = router
-
+module.exports = router;
