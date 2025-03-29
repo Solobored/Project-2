@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Check if we're already connected
 const isConnected = () => mongoose.connection.readyState === 1;
 
 const connectDB = async () => {

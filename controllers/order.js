@@ -3,7 +3,6 @@ const Product = require('../models/product');
 const ErrorResponse = require('../utils/errorResponse');
 const { check, validationResult } = require('express-validator');
 
-// Validation rules for creating orders
 exports.validateOrderCreation = [
   check('products').isArray({ min: 1 }).withMessage('At least one product is required'),
   check('products.*.product').isMongoId().withMessage('Invalid product ID format'),
@@ -43,7 +42,6 @@ exports.getOrder = async (req, res, next) => {
       return next(new ErrorResponse(`Order not found with id ${req.params.id}`, 404));
     }
 
-    // Ensure user owns the order unless admin
     if (order.user.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse('Not authorized to access this order', 401));
     }
@@ -69,7 +67,6 @@ exports.createOrder = async (req, res, next) => {
   }
 
   try {
-    // Calculate total price from product IDs
     const productIds = req.body.products.map(p => p.product);
     const products = await Product.find({ _id: { $in: productIds } });
     
@@ -128,7 +125,6 @@ exports.updateOrder = async (req, res, next) => {
       return next(new ErrorResponse(`Order not found with id ${req.params.id}`, 404));
     }
 
-    // Only allow status updates
     const { status } = req.body;
     if (!status || !Order.schema.path('status').enumValues.includes(status)) {
       return next(new ErrorResponse('Invalid status value', 400));

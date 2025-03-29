@@ -1,4 +1,4 @@
-// Load env vars - this should be at the very top
+
 require('dotenv').config();
 
 const express = require("express");
@@ -17,7 +17,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Add this for form data
+app.use(express.urlencoded({ extended: true })); 
 app.use(cookieParser());
 
 // Session configuration
@@ -58,7 +58,7 @@ app.use("/api/products", require("./routes/product"));
 app.use("/api/orders", require("./routes/order"));
 app.use("/api/users", require("./routes/user"));
 
-// Home route with interactive forms
+// Home route 
 app.get("/", (req, res) => {
   res.send(`
     <style>
@@ -175,7 +175,7 @@ app.get("/", (req, res) => {
   `);
 });
 
-// Error handling middleware (must be last)
+// Error handling middleware 
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

@@ -4,7 +4,6 @@ const { ExtractJwt } = require('passport-jwt');
 const User = require('../models/user');
 
 module.exports = function(passport) {
-  // JWT Strategy
   const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.JWT_SECRET
@@ -24,7 +23,6 @@ module.exports = function(passport) {
     })
   );
 
-  // Google Strategy
   passport.use(
     new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -42,7 +40,7 @@ module.exports = function(passport) {
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            password: 'google-oauth', // Dummy password
+            password: 'google-oauth',
             role: 'user'
           });
         }

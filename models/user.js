@@ -38,9 +38,7 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// Encrypt password using bcrypt
 UserSchema.pre("save", async function (next) {
-  // Only run if password was modified
   if (!this.isModified("password")) {
     return next();
   }
@@ -50,17 +48,15 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-// Sign JWT and return
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
-// Match user entered password to hashed password in database
 UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Prevent model overwrite error
+
 module.exports = mongoose.models.User || mongoose.model("User", UserSchema);

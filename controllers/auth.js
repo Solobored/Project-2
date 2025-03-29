@@ -87,7 +87,6 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.sameSite = "none";
   }
 
-  // Don't redirect for regular login/register
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
     token,
@@ -100,7 +99,6 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 };
 
-// Export the functions correctly
 module.exports = {
   register,
   login,
